@@ -1,5 +1,4 @@
 #include <QtWidgets/QApplication>
-#include <QDebug>
 
 #include "script_editor.h"
 

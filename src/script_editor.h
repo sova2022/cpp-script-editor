@@ -1,19 +1,16 @@
 #pragma once
 
-#include <memory>
-
 #include "ui.h"
-
 
 class ScriptEditor : public QObject {
 	Q_OBJECT
 public:		
 	explicit ScriptEditor(QObject* parent = nullptr)
 	: QObject(parent) {
-		ui_ = new Ui();
+		ui_ = new Ui();			
 	}
 
-	void Show() {
+	void Show() {		
 		ui_->show();
 	}
 
