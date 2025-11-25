@@ -15,7 +15,7 @@
 # Сборка:
 
 ```bash
-git clone git@github.com:sova2022/cpp-script-editor.git
+git clone https://github.com/sova2022/cpp-script-editor.git
 cd cpp-script-editor
 mkdir build && cd build
 ```
