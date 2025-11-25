@@ -2,8 +2,6 @@
 
 #include <QtWidgets/QMainWindow>
 #include <QDebug>
-#include <QFile>
-#include <QFileDialog>
 #include <QHBoxLayout>
 #include <QLabel>
 #include <QMessageBox>
@@ -24,7 +22,8 @@ public:
 
     const QPushButton* GetLoadBtn();
     const QPushButton* GetSaveBtn();
-    const QTextEdit* GetEditor();    
+    QTextEdit* GetEditor(); 
+    void SetCurrentStatusInStatusBar(const QString& msg);
 
 private:
     QTextEdit* editor_    = nullptr;

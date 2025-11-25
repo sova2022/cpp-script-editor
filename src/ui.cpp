@@ -13,8 +13,12 @@ const QPushButton* Ui::GetSaveBtn() {
     return saveBtn_;
 }
 
-const QTextEdit* Ui::GetEditor() {
+QTextEdit* Ui::GetEditor() {
     return editor_;
+}
+
+void Ui::SetCurrentStatusInStatusBar(const QString& msg) {
+    statusBar()->showMessage(msg);
 }
 
 void Ui::SetUi() {
@@ -42,5 +46,5 @@ void Ui::SetUi() {
 
     centralWidget->setLayout(mainLayout);
 
-    statusBar()->showMessage("Ready");
+    SetCurrentStatusInStatusBar("Ready");
 }
