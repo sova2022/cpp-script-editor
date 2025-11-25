@@ -15,7 +15,7 @@ ScriptEditor::~ScriptEditor() {
 void ScriptEditor::ConnectWidgetsSignals() {
 	connect(ui_->GetSaveBtn(), &QPushButton::clicked, this, &ScriptEditor::onSave);
 	connect(ui_->GetLoadBtn(), &QPushButton::clicked, this, &ScriptEditor::onLoad);
-	connect(server_, &UdpFileServer::datagramRecived, this, &ScriptEditor::onDatagramRecieved);
+	connect(server_, &UdpFileServer::fileRequested, this, &ScriptEditor::onFileRequest);
 }
 
 void ScriptEditor::Show() {
@@ -98,10 +98,17 @@ bool ScriptEditor::onUnsavedChanges() {
 	return true;
 }
 
-void ScriptEditor::onDatagramRecieved(const QNetworkDatagram datagram) {
-	qDebug() << "Received UDP datagram:";
-	qDebug() << "  From:" << datagram.senderAddress().toString() << ":" << datagram.senderPort();
-	qDebug() << "  Data:" << datagram.data();
+void ScriptEditor::onFileRequest() {
+	if (currentFile_.isEmpty()) {
+		return;
+	}
+
+	QFile f(currentFile_);
+	if (!f.open(QIODevice::ReadOnly))
+		return;
+
+	QByteArray data = f.readAll();
+	server_->SendData(data);
 }
 
 bool ScriptEditor::IsScriptModified() {

@@ -1,8 +1,10 @@
 #pragma once
 
-#include <QNetworkDatagram>
-#include <QUdpSocket>
 #include <QHostAddress>
+#include <QNetworkDatagram>
+#include <QByteArray>
+#include <QUdpSocket>
+
 
 const quint16 PORT = 7755;
 
@@ -21,16 +23,34 @@ public:
         connect(socket_, &QUdpSocket::readyRead, this, &UdpFileServer::readPendingDatagrams);
     }
 
+    void SendData(const QByteArray& data) {
+        socket_->writeDatagram(data, lastSenderAddress_, lastSenderPort_);
+    }
+
 signals:
-    void datagramRecived(const QNetworkDatagram datagram);
+    void fileRequested();
 
-private:
-    QUdpSocket* socket_;
-
+private slots:
     void readPendingDatagrams() {
         while (socket_->hasPendingDatagrams()) {
             QNetworkDatagram datagram = socket_->receiveDatagram();
-            emit datagramRecived(datagram);
+            HandleRequest(datagram);            
         }
     }
+
+private:
+    QUdpSocket* socket_;
+    QHostAddress lastSenderAddress_;
+    quint16 lastSenderPort_;
+
+
+    void HandleRequest(const QNetworkDatagram& datagram) {
+        if (datagram.data() == "REQ") {
+            lastSenderAddress_ = datagram.senderAddress();
+            lastSenderPort_ = datagram.senderPort();
+            emit fileRequested();
+        }
+    }
+
+    
 };

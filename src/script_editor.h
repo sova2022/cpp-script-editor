@@ -22,7 +22,7 @@ public slots:
 
 private slots:
 	bool onUnsavedChanges();
-	void onDatagramRecieved(const QNetworkDatagram datagram);
+	void onFileRequest();
 
 private:
 	Ui* ui_;
