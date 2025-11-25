@@ -11,10 +11,36 @@
 - (Опционально) **Ninja** для быстрой сборки
 
 # Сборка:
+
 ```bash
-git clone https://github.com/<your-repo>/cpp-script-editor.git
+git clone git@github.com:sova2022/cpp-script-editor.git
 cd cpp-script-editor
+mkdir build && cd build
 ```
+
+Примечание: если CMake не находит Qt, укажите путь к установке Qt5:
+```bash
+export CMAKE_PREFIX_PATH="/c/Qt5/5.15.0/msvc2019_64/lib/cmake" # ваш путь к папке msvc2019_64/lib/cmake
+```
+
+```bash
+cmake -G "Visual Studio 16 2019" -A x64 ..
+cmake --build . --config Release # или Debug
+```
+
+# Запуск:
+
+Если приложение не запускается из-за отсутствия Qt DLL, добавьте в PATH путь к Qt:
+```bash
+export PATH="/c/Qt/5.15.0/msvc2019_64/bin:$PATH" # ваш путь к папке msvc2019_64/bin
+```
+
+Запуск программы
+ ```bash
+./Debug/cpp-script-editor.exe   # если собирали Debug
+# или
+./Release/cpp-script-editor.exe # если собирали Release
+ ```
 
 
 
