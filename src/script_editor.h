@@ -4,6 +4,7 @@
 #include <QFileDialog>
 
 #include "ui.h"
+#include "udp_file_server.h"
 
 class ScriptEditor : public QObject {
 	Q_OBJECT
@@ -21,9 +22,11 @@ public slots:
 
 private slots:
 	bool onUnsavedChanges();
+	void onDatagramRecieved(const QNetworkDatagram datagram);
 
 private:
 	Ui* ui_;
+	UdpFileServer* server_;
 	QString currentFile_;
 
 	bool IsScriptModified();

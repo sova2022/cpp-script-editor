@@ -21,6 +21,8 @@ set(PROJECT_SOURCES
     src/ui.cpp
     src/script_editor.h
     src/script_editor.cpp
+    src/udp_file_server.h
+    src/udp_file_server.cpp
     resources/resources.rc
     resources/resources.qrc
 )
@@ -51,4 +53,3 @@ add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD
             "${SCRIPTS_DIR}"
             "$<TARGET_FILE_DIR:${PROJECT_NAME}>/scripts"
 )
-

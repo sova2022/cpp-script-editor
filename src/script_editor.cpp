@@ -1,8 +1,11 @@
 #include "script_editor.h"
 
 ScriptEditor::ScriptEditor(QObject* parent)
-	: QObject(parent) {
-	ui_ = new Ui();
+	: QObject(parent)
+	, ui_(new Ui()) 
+	, server_(new UdpFileServer(this)) {
+
+	server_->InitSocket();
 }
 
 ScriptEditor::~ScriptEditor() {
@@ -12,6 +15,7 @@ ScriptEditor::~ScriptEditor() {
 void ScriptEditor::ConnectWidgetsSignals() {
 	connect(ui_->GetSaveBtn(), &QPushButton::clicked, this, &ScriptEditor::onSave);
 	connect(ui_->GetLoadBtn(), &QPushButton::clicked, this, &ScriptEditor::onLoad);
+	connect(server_, &UdpFileServer::datagramRecived, this, &ScriptEditor::onDatagramRecieved);
 }
 
 void ScriptEditor::Show() {
@@ -44,7 +48,6 @@ void ScriptEditor::onSave() {
 	out << ui_->GetEditor()->toPlainText();
 
 	ui_->GetEditor()->document()->setModified(false);
-
 	ui_->SetCurrentStatusInStatusBar("File has been saved");
 }
 
@@ -93,6 +96,12 @@ bool ScriptEditor::onUnsavedChanges() {
 	}
 
 	return true;
+}
+
+void ScriptEditor::onDatagramRecieved(const QNetworkDatagram datagram) {
+	qDebug() << "Received UDP datagram:";
+	qDebug() << "  From:" << datagram.senderAddress().toString() << ":" << datagram.senderPort();
+	qDebug() << "  Data:" << datagram.data();
 }
 
 bool ScriptEditor::IsScriptModified() {
