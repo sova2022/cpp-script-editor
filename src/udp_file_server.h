@@ -5,52 +5,46 @@
 #include <QByteArray>
 #include <QUdpSocket>
 
-
 const quint16 PORT = 7755;
 
+/**
+ * @brief UDP-сервер для отправки скрипта по запросу клиента.
+ *
+ * Прослушивает входящие datagram-запросы и отправляет текущий 
+ * сохраненный или загруженный текст скрипта обратно инициатору.
+ */
 class UdpFileServer : public QObject {
     Q_OBJECT
 public:
-    explicit UdpFileServer(QObject* parent = nullptr)
-        : QObject(parent)
-        , socket_(new QUdpSocket(this)) {
-    }
+    explicit UdpFileServer(QObject* parent = nullptr);
 
     ~UdpFileServer() override = default;
 
-    void InitSocket() {
-        socket_->bind(QHostAddress::LocalHost, PORT);
-        connect(socket_, &QUdpSocket::readyRead, this, &UdpFileServer::readPendingDatagrams);
-    }
+    /**
+     * @brief Инициализирует UDP-сокет и начинает прослушку порта.
+     */
+    void InitSocket();
 
-    void SendData(const QByteArray& data) {
-        socket_->writeDatagram(data, lastSenderAddress_, lastSenderPort_);
-    }
+    /**
+     * @brief Отправляет данные последнему подключившемуся клиенту.
+     * @param data Байтовые данные для отправки.
+     */
+    void SendData(const QByteArray& data);
 
 signals:
     void fileRequested();
 
 private slots:
-    void readPendingDatagrams() {
-        while (socket_->hasPendingDatagrams()) {
-            QNetworkDatagram datagram = socket_->receiveDatagram();
-            HandleRequest(datagram);            
-        }
-    }
+    void readPendingDatagrams();
 
 private:
     QUdpSocket* socket_;
     QHostAddress lastSenderAddress_;
     quint16 lastSenderPort_;
 
-
-    void HandleRequest(const QNetworkDatagram& datagram) {
-        if (datagram.data() == "REQ") {
-            lastSenderAddress_ = datagram.senderAddress();
-            lastSenderPort_ = datagram.senderPort();
-            emit fileRequested();
-        }
-    }
-
-    
+    /**
+     * @brief Обрабатывает одну входящую датаграмму.
+     * @param datagram Входящая датаграмма от клиента.
+     */
+    void HandleRequest(const QNetworkDatagram& datagram);
 };

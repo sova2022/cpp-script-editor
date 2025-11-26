@@ -3,9 +3,7 @@
 ScriptEditor::ScriptEditor(QObject* parent)
 	: QObject(parent)
 	, ui_(new Ui()) 
-	, server_(new UdpFileServer(this)) {
-
-	server_->InitSocket();
+	, server_(new UdpFileServer(this)) {	
 }
 
 ScriptEditor::~ScriptEditor() {
@@ -15,7 +13,13 @@ ScriptEditor::~ScriptEditor() {
 void ScriptEditor::ConnectWidgetsSignals() {
 	connect(ui_->GetSaveBtn(), &QPushButton::clicked, this, &ScriptEditor::onSave);
 	connect(ui_->GetLoadBtn(), &QPushButton::clicked, this, &ScriptEditor::onLoad);
-	connect(server_, &UdpFileServer::fileRequested, this, &ScriptEditor::onFileRequest);
+	connect(ui_->GetEditor(), &QTextEdit::textChanged, this, &ScriptEditor::onScriptModified);
+	connect(server_, &UdpFileServer::fileRequested, this, &ScriptEditor::onFileRequest);	
+}
+
+void ScriptEditor::InitSocket() {
+	server_->InitSocket();
+	ui_->SetCurrentStatusInStatusBar("Ready");
 }
 
 void ScriptEditor::Show() {
@@ -73,6 +77,10 @@ void ScriptEditor::onLoad() {
 	ui_->SetCurrentStatusInStatusBar("File has been loaded");
 
 	currentFile_ = fn;
+}
+
+void ScriptEditor::onScriptModified() {
+	ui_->SetCurrentStatusInStatusBar("Document modified");
 }
 
 bool ScriptEditor::onUnsavedChanges() {

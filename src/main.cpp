@@ -7,6 +7,7 @@ int main(int argc, char *argv[]) {
 
     ScriptEditor se;
     se.ConnectWidgetsSignals();
+    se.InitSocket();
     se.Show();
 
     return app.exec();

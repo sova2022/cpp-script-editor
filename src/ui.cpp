@@ -44,7 +44,5 @@ void Ui::SetUi() {
     mainLayout->addLayout(rightPanel);
     mainLayout->setStretch(0, 1);
 
-    centralWidget->setLayout(mainLayout);
-
-    SetCurrentStatusInStatusBar("Ready");
+    centralWidget->setLayout(mainLayout);   
 }
